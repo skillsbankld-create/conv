@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Conversation Lab | Skills Bank</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --navy:#0b1e3d;--navy2:#0e2347;--navy3:#162d55;
+      --gold:#e8a020;--gold2:#f5b942;
+      --teal:#3dd6b5;--teal2:#5eedd0;
+      --teal-bg:rgba(61,214,181,0.15);--teal-border:rgba(61,214,181,0.4);
+      --white:#ffffff;--offwhite:#e8edf5;--muted:#7a94b8;--border:#1e3460;
+      --success-bg:rgba(16,100,50,0.25);--success-border:#1a7a40;--success-text:#5ddb8a;
+      --warning-bg:rgba(120,80,0,0.25);--warning-border:#a06800;--warning-text:#ffc84a;
+      --danger-bg:rgba(120,20,20,0.25);--danger-border:#a02020;--danger-text:#ff7070;
+    }
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:var(--white);min-height:100vh;}
+
+    /* TOPBAR */
+    .topbar{background:var(--navy2);border-bottom:2px solid var(--gold);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;}
+    .brand{display:flex;align-items:center;gap:12px;}
+    .brand-text h1{font-size:16px;font-weight:800;color:var(--white);}
+    .brand-text p{font-size:11px;color:var(--gold);margin-top:1px;font-weight:600;}
+    .metrics{display:flex;gap:10px;}
+    .metric{background:var(--navy3);border:1px solid var(--border);border-radius:10px;padding:6px 14px;text-align:center;min-width:90px;}
+    .metric-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+    .metric-value{font-size:18px;font-weight:800;color:var(--gold);}
+
+    /* INTRO */
+    .intro-screen{padding:36px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:600px;margin:0 auto;}
+    .intro-badge{display:inline-flex;align-items:center;gap:6px;background:var(--teal-bg);border:1px solid var(--teal-border);color:var(--teal);font-size:10px;font-weight:800;padding:5px 14px;border-radius:99px;text-transform:uppercase;letter-spacing:1px;margin-bottom:18px;}
+    .intro-title{font-size:26px;font-weight:800;color:var(--white);margin-bottom:10px;}
+    .intro-sub{font-size:13px;color:var(--muted);line-height:1.75;max-width:460px;margin-bottom:26px;}
+    .intro-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;margin-bottom:22px;}
+    .intro-card{background:var(--navy2);border:1px solid var(--border);border-radius:14px;padding:16px 10px;text-align:center;}
+    .intro-card-icon{font-size:24px;margin-bottom:8px;}
+    .intro-card-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:4px;}
+    .intro-card-desc{font-size:10px;color:var(--muted);line-height:1.5;}
+    .gamified-box{background:var(--navy2);border:1px solid var(--teal-border);border-radius:14px;padding:18px 22px;width:100%;margin-bottom:18px;text-align:left;}
+    .gam-title{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;}
+    .gam-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+    .gam-row:last-child{margin-bottom:0;}
+    .gam-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-top:5px;}
+    .gam-text{font-size:12px;color:var(--offwhite);line-height:1.6;}
+    .gam-text span{color:var(--teal);font-weight:700;}
+    .rules-box{background:var(--navy3);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:14px 18px;width:100%;margin-bottom:28px;text-align:left;}
+    .rules-title{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
+    .rule-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:12px;color:var(--muted);line-height:1.55;}
+    .rule-item:last-child{margin-bottom:0;}
+    .rule-num{color:var(--gold);font-weight:800;flex-shrink:0;}
+    .start-btn{padding:14px 44px;border-radius:13px;border:none;background:var(--gold);color:var(--navy);font-size:15px;font-weight:800;cursor:pointer;transition:background .2s,transform .1s;letter-spacing:0.3px;}
+    .start-btn:hover{background:var(--gold2);transform:scale(1.03);}
+
+    /* LAYOUT */
+    .layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 56px);}
+    .sidebar{background:var(--navy2);border-right:1px solid var(--border);padding:20px 14px;}
+    .sidebar-title{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+    .sidebar-desc{font-size:11px;color:var(--muted);line-height:1.65;margin-bottom:16px;}
+    .prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:5px;}
+    .prog-track{width:100%;height:5px;background:var(--navy3);border-radius:99px;overflow:hidden;}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;transition:width .4s;}
+    .skills-title{font-size:10px;font-weight:700;color:var(--white);margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;}
+    .tag{display:inline-block;font-size:9px;padding:3px 8px;border-radius:99px;background:var(--navy3);border:1px solid var(--border);color:var(--muted);margin:2px 2px;}
+    .tip-box{margin-top:16px;background:var(--navy3);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:10px;}
+    .tip-box strong{color:var(--gold);display:block;font-size:9px;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+    .tip-box p{font-size:10px;color:var(--muted);line-height:1.65;}
+
+    /* MAIN */
+    .main{background:var(--navy);flex:1;}
+    .scenario-img-wrap{width:100%;height:160px;overflow:hidden;position:relative;}
+    .scenario-img-wrap svg{width:100%;height:100%;}
+    .img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,30,61,0.1),rgba(11,30,61,0.85));}
+    .scenario-header{padding:16px 22px 14px;background:var(--navy2);border-bottom:1px solid var(--border);}
+    .badge{display:inline-block;font-size:9px;font-weight:800;padding:3px 10px;border-radius:99px;background:rgba(232,160,32,0.15);border:1px solid rgba(232,160,32,0.4);color:var(--gold);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+    .scenario-title{font-size:16px;font-weight:800;color:var(--white);margin-bottom:5px;}
+    .scenario-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+    .timer-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
+    .timer-label{font-size:10px;color:var(--muted);}
+    .timer-val{font-size:12px;font-weight:800;color:var(--gold);min-width:30px;}
+    .timer-track{flex:1;height:4px;background:var(--navy3);border-radius:99px;overflow:hidden;}
+    .timer-fill{height:100%;background:var(--gold);border-radius:99px;transition:width 1s linear;}
+
+    .chat-area{padding:16px 22px;display:flex;flex-direction:column;gap:12px;min-height:80px;}
+    .msg-incoming{max-width:76%;background:var(--navy2);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:10px 15px;font-size:13px;line-height:1.65;}
+    .msg-sender{font-size:9px;color:var(--gold);font-weight:800;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+    .msg-outgoing{align-self:flex-end;max-width:76%;background:var(--navy3);border:1px solid rgba(232,160,32,0.3);border-radius:14px 4px 14px 14px;padding:10px 15px;font-size:13px;line-height:1.65;color:var(--offwhite);}
+
+    .choices-head{padding:8px 22px 5px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:700;}
+    .choices-area{padding:0 22px 14px;display:flex;flex-direction:column;gap:8px;}
+    .choice-btn{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;cursor:pointer;text-align:left;transition:border-color .15s,background .15s;width:100%;color:var(--white);}
+    .choice-btn:hover{border-color:var(--teal);background:var(--teal);}
+    .choice-btn:hover .choice-label{color:var(--navy);opacity:0.75;}
+    .choice-btn:hover .choice-text{color:var(--navy);}
+    .choice-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;font-weight:700;transition:color .15s;}
+    .choice-text{font-size:13px;line-height:1.6;color:var(--offwhite);transition:color .15s;}
+
+    .feedback-box{margin:0 22px 14px;padding:14px 16px;border-radius:12px;display:none;border-left:4px solid;}
+    .feedback-box.success{background:var(--success-bg);border-color:var(--success-text);}
+    .feedback-box.warning{background:var(--warning-bg);border-color:var(--warning-text);}
+    .feedback-box.danger{background:var(--danger-bg);border-color:var(--danger-text);}
+    .fb-title{font-weight:800;font-size:13px;margin-bottom:6px;}
+    .feedback-box.success .fb-title{color:var(--success-text);}
+    .feedback-box.warning .fb-title{color:var(--warning-text);}
+    .feedback-box.danger .fb-title{color:var(--danger-text);}
+    .fb-body{font-size:12px;line-height:1.65;color:rgba(220,230,245,0.85);}
+    .next-btn{display:inline-block;margin-top:12px;padding:10px 22px;border-radius:10px;border:none;background:var(--gold);color:var(--navy);font-size:13px;font-weight:800;cursor:pointer;transition:background .2s;}
+    .next-btn:hover{background:var(--gold2);}
+    .divider{height:1px;background:var(--border);}
+
+    /* FINAL */
+    .final-screen{display:none;padding:36px 24px;text-align:center;}
+    .final-title{font-size:22px;font-weight:800;color:var(--white);margin-bottom:6px;}
+    .final-sub{font-size:12px;color:var(--muted);margin-bottom:22px;}
+    .score-ring{width:110px;height:110px;border-radius:50%;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 18px;background:rgba(232,160,32,0.08);}
+    .score-num{font-size:32px;font-weight:800;color:var(--gold);}
+    .score-sub-ring{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .level-badge{display:inline-block;padding:6px 18px;border-radius:99px;font-size:13px;font-weight:800;margin-bottom:18px;}
+    .level-badge.master{background:rgba(50,200,100,0.15);border:1px solid rgba(50,200,100,0.4);color:#5ddb8a;}
+    .level-badge.skilled{background:rgba(232,160,32,0.15);border:1px solid rgba(232,160,32,0.4);color:var(--gold);}
+    .level-badge.learning{background:rgba(220,60,60,0.15);border:1px solid rgba(220,60,60,0.4);color:#ff7070;}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:380px;margin:0 auto 18px;}
+    .result-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;}
+    .rc-val{font-size:18px;font-weight:800;color:var(--gold);}
+    .rc-label{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.4px;}
+    .final-quote{max-width:420px;margin:0 auto 22px;font-size:12px;color:var(--muted);line-height:1.8;font-style:italic;border-top:1px solid var(--border);padding-top:16px;}
+    .restart-btn{padding:11px 26px;border-radius:11px;background:var(--gold);color:var(--navy);border:none;font-size:14px;font-weight:800;cursor:pointer;transition:background .2s;}
+    .restart-btn:hover{background:var(--gold2);}
+
+    @media(max-width:700px){
+      .layout{grid-template-columns:1fr;}
+      .sidebar{display:none;}
+      .intro-cards{grid-template-columns:1fr;}
+      .result-grid{grid-template-columns:1fr 1fr 1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <svg width="46" height="36" viewBox="0 0 46 36" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="8" width="22" height="22" fill="white"/>
+      <rect x="11" y="8" width="11" height="11" fill="#0e2347"/>
+      <rect x="13" y="2" width="9" height="9" fill="white"/>
+    </svg>
+    <div class="brand-text">
+      <h1>The Conversation Lab</h1>
+      <p>Crucial Conversations Simulator • Skills Bank</p>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Safety Level</div><div class="metric-value" id="safetyVal">—</div></div>
+    <div class="metric"><div class="metric-label">Score</div><div class="metric-value" id="scoreVal">—</div></div>
+  </div>
+</div>
+
+<!-- INTRO SCREEN -->
+<div id="introScreen" class="intro-screen">
+  <div class="intro-badge">🎮 Gamified Learning Activity</div>
+  <div class="intro-title">The Conversation Lab</div>
+  <div class="intro-sub">A skill-building simulation designed to sharpen your ability to navigate high-stakes workplace conversations — safely, confidently, and with impact.</div>
+
+  <div class="intro-cards">
+    <div class="intro-card"><div class="intro-card-icon">⚡</div><div class="intro-card-title">5 Scenarios</div><div class="intro-card-desc">Real workplace situations you will actually face</div></div>
+    <div class="intro-card"><div class="intro-card-icon">⏱️</div><div class="intro-card-title">45 Sec Each</div><div class="intro-card-desc">Think fast — just like real conversations</div></div>
+    <div class="intro-card"><div class="intro-card-icon">📊</div><div class="intro-card-title">Live Score</div><div class="intro-card-desc">Safety and dialogue score update in real time</div></div>
+  </div>
+
+  <div class="gamified-box">
+    <div class="gam-title">🏆 How the Game Works</div>
+    <div class="gam-row"><div class="gam-dot"></div><div class="gam-text">Each scenario shows a <span>real workplace conflict</span>. Read it carefully.</div></div>
+    <div class="gam-row"><div class="gam-dot"></div><div class="gam-text">Choose from 3 responses: <span>Constructive</span>, <span>Fight</span>, or <span>Avoidance</span>.</div></div>
+    <div class="gam-row"><div class="gam-dot"></div><div class="gam-text">Best choice = <span>+2 points + Safety up</span>. Wrong choice = points and safety drop.</div></div>
+    <div class="gam-row"><div class="gam-dot"></div><div class="gam-text">If time runs out, the avoidance option is automatically selected.</div></div>
+    <div class="gam-row"><div class="gam-dot"></div><div class="gam-text">At the end, receive your <span>Dialogue Level</span>: Master, Skilled, or Still Learning.</div></div>
+  </div>
+
+  <div class="rules-box">
+    <div class="rules-title">💡 The Goal</div>
+    <div class="rule-item"><span class="rule-num">→</span>The goal is NOT to win arguments — it is to keep dialogue open.</div>
+    <div class="rule-item"><span class="rule-num">→</span>Great communicators create safety, listen deeply, and speak honestly.</div>
+    <div class="rule-item"><span class="rule-num">→</span>This simulation is based on the <strong style="color:#e8edf5;">Crucial Conversations</strong> framework by VitalSmarts.</div>
+  </div>
+
+  <button class="start-btn" onclick="startSim()">Start Simulation →</button>
+</div>
+
+<!-- SIM WRAPPER -->
+<div id="simWrapper" style="display:none;">
+  <div class="layout">
+
+    <div class="sidebar">
+      <div class="sidebar-title">Mission</div>
+      <div class="sidebar-desc">Navigate high-stakes conversations. Create safety, protect dialogue, build shared meaning.</div>
+      <div class="prog-label"><span>Progress</span><span id="progText">1 / 5</span></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:20%"></div></div>
+      <div class="skills-title">Core Skills</div>
+      <span class="tag">STATE Method</span>
+      <span class="tag">AMPP</span>
+      <span class="tag">Safety</span>
+      <span class="tag">Emotional Control</span>
+      <span class="tag">Active Listening</span>
+      <span class="tag">Conflict Nav</span>
+      <div class="tip-box">
+        <strong>Remember</strong>
+        <p>The goal is not to win — it is to keep dialogue open and reach shared meaning.</p>
+      </div>
+    </div>
+
+    <div class="main">
+      <div id="simScreen">
+        <div class="scenario-img-wrap" id="scenarioImgWrap"></div>
+        <div class="scenario-header">
+          <div class="badge">High-stakes conversation</div>
+          <div class="scenario-title" id="sTitle"></div>
+          <div class="scenario-desc" id="sDesc"></div>
+          <div class="timer-row">
+            <span class="timer-label">Time:</span>
+            <span class="timer-val" id="timerVal">45s</span>
+            <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+          </div>
+        </div>
+        <div class="chat-area" id="chatArea"></div>
+        <div class="divider"></div>
+        <div class="choices-head">Choose your response:</div>
+        <div class="choices-area" id="choicesArea"></div>
+        <div class="feedback-box" id="feedbackBox"></div>
+      </div>
+
+      <div class="final-screen" id="finalScreen">
+        <svg width="90" height="32" viewBox="0 0 54 22" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 16px;display:block;">
+          <rect x="0" y="5" width="13" height="13" fill="white"/>
+          <rect x="7" y="5" width="6" height="6" fill="#0b1e3d"/>
+          <rect x="8" y="0" width="5" height="5" fill="white"/>
+          <text x="17" y="12" font-size="7.5" font-weight="900" fill="white" font-family="Arial Black,Arial,sans-serif" letter-spacing="0.5">SKILLS</text>
+          <text x="17" y="21" font-size="7.5" font-weight="900" fill="white" font-family="Arial Black,Arial,sans-serif" letter-spacing="0.5">BANK</text>
+        </svg>
+        <div class="final-title">Simulation Complete</div>
+        <div class="final-sub">Crucial Conversations • The Conversation Lab</div>
+        <div class="score-ring"><div class="score-num" id="finalScoreNum">0</div><div class="score-sub-ring">Points</div></div>
+        <div class="level-badge" id="levelBadge">—</div>
+        <div class="result-grid">
+          <div class="result-card"><div class="rc-val" id="rcSafety">—</div><div class="rc-label">Safety</div></div>
+          <div class="result-card"><div class="rc-val" id="rcCorrect">—</div><div class="rc-label">Best Choices</div></div>
+          <div class="result-card"><div class="rc-val" id="rcAvoided">—</div><div class="rc-label">Avoided</div></div>
+        </div>
+        <div class="final-quote" id="finalQuote"></div>
+        <button class="restart-btn" onclick="restartFull()">Play Again</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const illustrations=[
+`<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="160" fill="#071628"/><ellipse cx="280" cy="95" rx="155" ry="50" fill="none" stroke="#1e3460" stroke-width="2"/><rect x="205" y="76" width="150" height="32" rx="5" fill="#0e2347" stroke="#1e3460"/><g fill="#0e2347" stroke="#1e3460" stroke-width="1.2"><rect x="260" y="32" width="40" height="18" rx="4"/><rect x="260" y="110" width="40" height="18" rx="4"/><rect x="100" y="80" width="34" height="16" rx="4"/><rect x="426" y="80" width="34" height="16" rx="4"/><rect x="138" y="54" width="34" height="16" rx="4"/><rect x="388" y="54" width="34" height="16" rx="4"/><rect x="138" y="98" width="34" height="16" rx="4"/><rect x="388" y="98" width="34" height="16" rx="4"/></g><rect x="260" y="32" width="40" height="18" rx="4" fill="#e8a020" opacity="0.25" stroke="#e8a020"/><rect x="300" y="10" width="115" height="22" rx="6" fill="#162d55" stroke="#1e3460"/><text x="357" y="25" font-size="8" fill="#f5b942" text-anchor="middle" font-family="Segoe UI,sans-serif">? Strategy misaligned</text><line x1="300" y1="21" x2="284" y2="32" stroke="#1e3460" stroke-width="1"/></svg>`,
+`<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="160" fill="#071628"/><rect x="100" y="102" width="360" height="9" rx="3" fill="#0e2347" stroke="#1e3460"/><rect x="230" y="56" width="100" height="62" rx="5" fill="#0e2347" stroke="#1e3460" stroke-width="1.5"/><rect x="237" y="62" width="86" height="48" rx="3" fill="#071628"/><rect x="268" y="111" width="24" height="9" rx="2" fill="#162d55"/><g fill="#162d55" stroke="#1e3460"><rect x="118" y="76" width="50" height="5" rx="2"/><rect x="120" y="70" width="46" height="5" rx="2"/><rect x="116" y="64" width="54" height="5" rx="2"/><rect x="123" y="58" width="40" height="5" rx="2"/><rect x="113" y="52" width="58" height="5" rx="2"/><rect x="392" y="80" width="50" height="5" rx="2"/><rect x="394" y="74" width="46" height="5" rx="2"/><rect x="390" y="68" width="54" height="5" rx="2"/></g><circle cx="476" cy="42" r="20" fill="#0e2347" stroke="#1e3460" stroke-width="1.5"/><line x1="476" y1="42" x2="476" y2="26" stroke="#ff7070" stroke-width="2.5"/><line x1="476" y1="42" x2="488" y2="48" stroke="#e8a020" stroke-width="2"/><circle cx="280" cy="83" r="9" fill="#e8a020" opacity="0.15" stroke="#e8a020" stroke-width="0.8"/><line x1="276" y1="80" x2="276" y2="82" stroke="#e8a020" stroke-width="1.5"/><line x1="284" y1="80" x2="284" y2="82" stroke="#e8a020" stroke-width="1.5"/><path d="M275 89 Q280 86 285 89" stroke="#e8a020" stroke-width="1.2" fill="none"/></svg>`,
+`<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="160" fill="#071628"/><line x1="280" y1="10" x2="280" y2="148" stroke="#1e3460" stroke-width="1.5" stroke-dasharray="5,4"/><circle cx="155" cy="74" r="20" fill="#0e2347" stroke="#1e3a6e" stroke-width="1.5"/><circle cx="108" cy="94" r="15" fill="#0e2347" stroke="#1e3a6e"/><circle cx="198" cy="90" r="15" fill="#0e2347" stroke="#1e3a6e"/><text x="155" y="79" font-size="16" text-anchor="middle" fill="#7a94b8">⚙</text><text x="108" y="99" font-size="12" text-anchor="middle" fill="#7a94b8">⚙</text><text x="198" y="95" font-size="12" text-anchor="middle" fill="#7a94b8">⚙</text><text x="152" y="126" font-size="9" fill="#7a94b8" text-anchor="middle" font-family="Segoe UI,sans-serif">Operations</text><circle cx="405" cy="74" r="20" fill="#1a2b0e" stroke="#2a4a18" stroke-width="1.5"/><circle cx="358" cy="94" r="15" fill="#1a2b0e" stroke="#2a4a18"/><circle cx="448" cy="90" r="15" fill="#1a2b0e" stroke="#2a4a18"/><text x="405" y="79" font-size="16" text-anchor="middle" fill="#e8a020">$</text><text x="358" y="99" font-size="12" text-anchor="middle" fill="#e8a020">$</text><text x="448" y="95" font-size="12" text-anchor="middle" fill="#e8a020">$</text><text x="405" y="126" font-size="9" fill="#e8a020" text-anchor="middle" font-family="Segoe UI,sans-serif">Sales</text><polygon points="255,74 268,67 268,81" fill="#ff7070" opacity="0.7"/><polygon points="305,74 292,67 292,81" fill="#ff7070" opacity="0.7"/><text x="280" y="20" font-size="8" fill="#ff7070" text-anchor="middle" font-family="Segoe UI,sans-serif">Conflict Zone</text></svg>`,
+`<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="160" fill="#071628"/><circle cx="128" cy="66" r="26" fill="#0e2347" stroke="#1e3460" stroke-width="1.5"/><text x="128" y="73" font-size="20" text-anchor="middle">💬</text><rect x="162" y="30" width="108" height="36" rx="8" fill="#162d55" stroke="#1e3460"/><polygon points="162,46 150,53 164,58" fill="#162d55" stroke="#1e3460" stroke-width="0.8"/><text x="216" y="44" font-size="8" fill="#5ddb8a" text-anchor="middle" font-family="Segoe UI,sans-serif" font-weight="bold">Intent:</text><text x="216" y="57" font-size="8" fill="#7a94b8" text-anchor="middle" font-family="Segoe UI,sans-serif">Support growth</text><circle cx="432" cy="66" r="26" fill="#0e2347" stroke="#1e3460" stroke-width="1.5"/><text x="432" y="73" font-size="20" text-anchor="middle">😤</text><rect x="290" y="30" width="108" height="36" rx="8" fill="#2e0d0d" stroke="#a02020"/><polygon points="398,46 410,53 396,58" fill="#2e0d0d" stroke="#a02020" stroke-width="0.8"/><text x="344" y="44" font-size="8" fill="#ff7070" text-anchor="middle" font-family="Segoe UI,sans-serif" font-weight="bold">Impact:</text><text x="344" y="57" font-size="8" fill="#ff9090" text-anchor="middle" font-family="Segoe UI,sans-serif">I am incompetent?</text><line x1="280" y1="106" x2="390" y2="106" stroke="#1e3460" stroke-width="1" stroke-dasharray="4,3"/><text x="335" y="120" font-size="9" fill="#7a94b8" text-anchor="middle" font-family="Segoe UI,sans-serif">Intent does not equal Impact</text></svg>`,
+`<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="160" fill="#071628"/><polygon points="280,14 266,14 272,28 260,28 280,52 300,28 288,28 294,14" fill="#e8a020" opacity="0.7"/><rect x="230" y="55" width="100" height="20" rx="4" fill="#e8a020" opacity="0.2" stroke="#e8a020" stroke-width="1.5"/><text x="280" y="69" font-size="9" fill="#e8a020" text-anchor="middle" font-family="Segoe UI,sans-serif" font-weight="bold">Executive</text><rect x="180" y="80" width="200" height="20" rx="4" fill="#0e2347" stroke="#1e3460"/><text x="280" y="94" font-size="9" fill="#7a94b8" text-anchor="middle" font-family="Segoe UI,sans-serif">Team Lead</text><rect x="120" y="106" width="320" height="20" rx="4" fill="#0e2347" stroke="#1e3460"/><text x="280" y="120" font-size="9" fill="#7a94b8" text-anchor="middle" font-family="Segoe UI,sans-serif">Team Members</text><rect x="438" y="46" width="68" height="66" rx="6" fill="#0e2347" stroke="#1e3460" stroke-width="1.5"/><rect x="438" y="46" width="68" height="17" rx="6" fill="#a02020" opacity="0.6"/><text x="472" y="58" font-size="8" fill="#ff9090" text-anchor="middle" font-family="Segoe UI,sans-serif" font-weight="bold">DEADLINE</text><text x="472" y="90" font-size="18" fill="#ff7070" text-anchor="middle" font-weight="800">FRI</text><text x="472" y="106" font-size="8" fill="#7a94b8" text-anchor="middle" font-family="Segoe UI,sans-serif">No excuses</text><circle cx="76" cy="80" r="28" fill="#0e2347" stroke="#1e3460" stroke-width="1.5"/><line x1="76" y1="80" x2="76" y2="60" stroke="#ff7070" stroke-width="2.5"/><line x1="76" y1="80" x2="92" y2="88" stroke="#e8a020" stroke-width="2"/><circle cx="76" cy="80" r="3" fill="#e8a020"/></svg>`
+];
+
+const scenarios=[
+  {title:'Public challenge from senior manager',desc:'A senior stakeholder publicly questions your team strategy during a leadership meeting.',message:'I am not sure your team approach is aligned with our bigger vision here.',choices:[
+    {label:'Fight response',text:'Our plan was already approved. I am not sure why we are revisiting this now.',score:-1,safety:-15,type:'danger',fb:'This response becomes defensive and shifts focus away from dialogue. It signals you care more about being right than solving the problem.'},
+    {label:'Constructive response',text:'Thank you for raising that. Could we explore which parts feel misaligned so we can better understand the concern?',score:2,safety:10,type:'success',fb:'Excellent. You invited curiosity, protected safety, and kept the dialogue open — all hallmarks of a skilled communicator.'},
+    {label:'Avoidance response',text:'Maybe we can discuss this offline later if needed.',score:0,safety:-5,type:'warning',fb:'Deferring can feel safe, but it signals you are not ready to engage. Alignment gets delayed and trust erodes.'}
+  ]},
+  {title:'Burned-out team member',desc:'A team member expresses emotional exhaustion during a project discussion.',message:'Honestly, I feel like nobody notices how overloaded I am anymore.',choices:[
+    {label:'Fight response',text:'Everyone is overloaded. You are not the only one under pressure.',score:-1,safety:-15,type:'danger',fb:'Comparing struggles minimizes feelings and shuts down psychological safety fast.'},
+    {label:'Constructive response',text:'It sounds like this has been building up for a while. Help me understand what feels most overwhelming right now.',score:2,safety:12,type:'success',fb:'Excellent emotional intelligence. You acknowledged the feeling and opened space for a real conversation.'},
+    {label:'Avoidance response',text:'Let us revisit workload planning in our next team meeting.',score:0,safety:-6,type:'warning',fb:'Deferring a personal concern to a group meeting can feel dismissive. The moment of trust was now — not later.'}
+  ]},
+  {title:'Cross-department conflict',desc:'Operations and Sales are blaming each other for project delays in front of leadership.',message:'Sales keeps making unrealistic promises and we are the ones suffering because of it.',choices:[
+    {label:'Fight response',text:'Maybe Operations should move faster instead of complaining.',score:-1,safety:-18,type:'danger',fb:'This escalates the blame cycle. Both teams lose trust and the real problem goes unsolved.'},
+    {label:'Constructive response',text:'It sounds like both teams are under pressure. Let us identify the shared outcome we are both trying to reach.',score:2,safety:14,type:'success',fb:'Strong reframe. You shifted from blame to shared purpose — the foundation of cross-functional collaboration.'},
+    {label:'Avoidance response',text:'Let us just finish this project first and discuss the tension later.',score:0,safety:-4,type:'warning',fb:'Pushing through without addressing tension usually means the same conflict resurfaces next time.'}
+  ]},
+  {title:'Feedback misinterpretation',desc:'A colleague becomes defensive after receiving your constructive feedback.',message:'So now you think I am incompetent because of one mistake?',choices:[
+    {label:'Fight response',text:'You are overreacting. Nobody said you are incompetent.',score:-1,safety:-16,type:'danger',fb:'Dismissing emotional reactions deepens defensiveness and erodes trust.'},
+    {label:'Constructive response',text:'I appreciate you sharing how this landed for you. My intention is to support your growth, not question your capability.',score:2,safety:12,type:'success',fb:'Excellent. You separated intent from impact, restored safety, and kept the door open for a real conversation.'},
+    {label:'Avoidance response',text:'Forget it. Let us just move on.',score:0,safety:-5,type:'warning',fb:'Moving on without clarity leaves the misunderstanding in place. It will resurface in future interactions.'}
+  ]},
+  {title:'Executive pressure on deadlines',desc:'A senior executive pressures your team to deliver beyond realistic timelines.',message:'I need this completed by Friday. I do not want to hear excuses.',choices:[
+    {label:'Fight response',text:'That timeline is not realistic. Your expectations are setting the team up to fail.',score:-1,safety:-20,type:'danger',fb:'Even when accurate, this framing damages credibility and triggers defensiveness.'},
+    {label:'Constructive response',text:'I understand the urgency completely. Could we review priorities together so we can deliver the highest-impact outcome by Friday?',score:2,safety:15,type:'success',fb:'Masterful. You acknowledged urgency, protected your team, and turned pressure into a collaborative problem-solving moment.'},
+    {label:'Avoidance response',text:'Okay. We will do our best.',score:0,safety:-8,type:'warning',fb:'Passive agreement hides real constraints. This leads to missed expectations and broken trust later.'}
+  ]}
+];
+
+let cur=0,totalScore=0,safety=82,timerInt,correctCount=0,avoidedCount=0;
+function $(id){return document.getElementById(id);}
+
+function startSim(){
+  $('introScreen').style.display='none';
+  $('simWrapper').style.display='block';
+  $('safetyVal').textContent='82%';
+  $('scoreVal').textContent='0';
+  loadScenario();
+}
+
+function updateMetrics(){
+  $('scoreVal').textContent=totalScore;
+  $('safetyVal').textContent=Math.max(0,Math.min(100,safety))+'%';
+}
+
+function loadScenario(){
+  const s=scenarios[cur];
+  $('sTitle').textContent=s.title;
+  $('sDesc').textContent=s.desc;
+  $('scenarioImgWrap').innerHTML=illustrations[cur]+'<div class="img-overlay"></div>';
+  $('chatArea').innerHTML=`<div class="msg-incoming"><div class="msg-sender">Colleague</div>${s.message}</div>`;
+  $('choicesArea').innerHTML='';
+  $('feedbackBox').style.display='none';
+  const pct=Math.round(((cur+1)/scenarios.length)*100);
+  $('progFill').style.width=pct+'%';
+  $('progText').textContent=`${cur+1} / ${scenarios.length}`;
+  s.choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.innerHTML=`<div class="choice-label">${c.label}</div><div class="choice-text">${c.text}</div>`;
+    btn.onclick=()=>pick(c);
+    $('choicesArea').appendChild(btn);
+  });
+  startTimer();
+}
+
+function pick(c){
+  clearInterval(timerInt);
+  totalScore+=c.score;safety+=c.safety;
+  if(c.type==='success')correctCount++;
+  if(c.type==='warning')avoidedCount++;
+  updateMetrics();
+  $('choicesArea').innerHTML='';
+  $('chatArea').innerHTML+=`<div class="msg-outgoing">${c.text}</div>`;
+  const titles={success:'Constructive dialogue',warning:'Avoidance detected',danger:'Dialogue at risk'};
+  const fb=$('feedbackBox');
+  fb.className=`feedback-box ${c.type}`;
+  fb.innerHTML=`<div class="fb-title">${titles[c.type]}</div><div class="fb-body">${c.fb}</div><button class="next-btn" onclick="nextScenario()">${cur+1<scenarios.length?'Next Scenario →':'View My Results →'}</button>`;
+  fb.style.display='block';
+}
+
+function nextScenario(){
+  cur++;
+  if(cur>=scenarios.length){showFinal();return;}
+  loadScenario();
+}
+
+function showFinal(){
+  $('simScreen').style.display='none';
+  $('finalScreen').style.display='block';
+  const finalSafety=Math.max(0,Math.min(100,safety));
+  $('finalScoreNum').textContent=totalScore;
+  $('rcSafety').textContent=finalSafety+'%';
+  $('rcCorrect').textContent=correctCount+'/'+scenarios.length;
+  $('rcAvoided').textContent=avoidedCount;
+  let level,quote;
+  if(correctCount>=4){
+    level='Dialogue Master';
+    $('levelBadge').className='level-badge master';
+    quote='"Exceptional communicators are not people who avoid difficult conversations. They stay calm, protect dialogue, and create shared meaning — even during conflict."';
+  }else if(correctCount>=2){
+    level='Skilled Communicator';
+    $('levelBadge').className='level-badge skilled';
+    quote='"Every crucial conversation is a turning point. With practice, you can stay curious, keep safety high, and lead others toward honest dialogue."';
+  }else{
+    level='Still Learning';
+    $('levelBadge').className='level-badge learning';
+    quote='"Awareness is the first step. Recognizing how we fight or flee under pressure is the foundation for building stronger dialogue skills."';
+  }
+  $('levelBadge').textContent=level;
+  $('finalQuote').textContent=quote;
+}
+
+function startTimer(){
+  clearInterval(timerInt);
+  let t=45;
+  $('timerVal').textContent=t+'s';
+  $('timerFill').style.width='100%';
+  timerInt=setInterval(()=>{
+    t--;
+    $('timerVal').textContent=t+'s';
+    $('timerFill').style.width=Math.round((t/45)*100)+'%';
+    if(t<=0){clearInterval(timerInt);pick(scenarios[cur].choices[2]);}
+  },1000);
+}
+
+function restartFull(){
+  cur=0;totalScore=0;safety=82;correctCount=0;avoidedCount=0;
+  $('safetyVal').textContent='—';
+  $('scoreVal').textContent='—';
+  $('introScreen').style.display='flex';
+  $('simWrapper').style.display='none';
+  $('simScreen').style.display='block';
+  $('finalScreen').style.display='none';
+}
+</script>
+</body>
+</html>
